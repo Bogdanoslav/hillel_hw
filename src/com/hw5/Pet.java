@@ -2,28 +2,28 @@ package com.hw5;
 
 public class Pet extends Animal{
     String name;
-    boolean isVaccinated;
+    boolean vaccinated;
 
     public Pet(int id, int age, int weight, String color, String name, boolean isVaccinated) {
         super(id, age, weight, color);
         this.name = name;
-        this.isVaccinated = isVaccinated;
+        this.vaccinated = isVaccinated;
     }
 
     @Override
-    public String Say() {
-        return super.Say() + "my name is " + name;
+    public String say() {
+        return super.say() + "my name is " + name;
     }
 
     @Override
     public String toString() {
         return "Pet{" +
                 "name='" + name + '\'' +
-                ", isVaccinated=" + isVaccinated +
-                ", id=" + id +
-                ", age=" + age +
-                ", weight=" + weight +
-                ", color='" + color + '\'' +
+                ", isVaccinated=" + vaccinated +
+                ", id=" + this.getId() +
+                ", age=" + this.getAge() +
+                ", weight=" + this.getWeight() +
+                ", color='" + this.getColor() + '\'' +
                 '}';
     }
 
@@ -36,10 +36,10 @@ public class Pet extends Animal{
     }
 
     public boolean isVaccinated() {
-        return isVaccinated;
+        return vaccinated;
     }
 
     public void setVaccinated(boolean vaccinated) {
-        isVaccinated = vaccinated;
+        this.vaccinated = vaccinated;
     }
 }

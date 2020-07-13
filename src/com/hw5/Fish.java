@@ -6,7 +6,7 @@ public class Fish extends Pet{
     }
 
     @Override
-    public String Say() {
+    public String say() {
         return "...";
     }
 

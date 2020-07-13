@@ -6,8 +6,8 @@ public class Cat extends Pet {
     }
 
     @Override
-    public String Say() {
-        return super.Say() + ". Meow";
+    public String say() {
+        return super.say() + ". Meow";
     }
 
 

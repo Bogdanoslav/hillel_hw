@@ -1,19 +1,19 @@
 package com.hw5;
 
 public class GuideDog extends Dog{
-    boolean isTrained;
+    boolean trained;
 
-    public GuideDog(int id, int age, int weight, String color, String name, boolean isVaccinated, boolean isTrained) {
+    public GuideDog(int id, int age, int weight, String color, String name, boolean isVaccinated, boolean trained) {
         super(id, age, weight, color, name, isVaccinated);
-        this.isTrained = isTrained;
+        this.trained = trained;
     }
 
     @Override
-    public String Say() {
-        if(isTrained)
-            return super.Say() + ". I can take you home";
+    public String say() {
+        if(trained)
+            return super.say() + ". I can take you home";
         else{
-            return super.Say();
+            return super.say();
         }
     }
 
@@ -30,10 +30,10 @@ public class GuideDog extends Dog{
     }
 
     public boolean isTrained() {
-        return isTrained;
+        return trained;
     }
 
     public void setTrained(boolean trained) {
-        isTrained = trained;
+        this.trained = trained;
     }
 }

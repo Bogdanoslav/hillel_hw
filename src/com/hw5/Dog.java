@@ -6,7 +6,7 @@ public class Dog extends Pet{
     }
 
     @Override
-    public String Say() {
-        return super.Say() + ". Woof";
+    public String say() {
+        return super.say() + ". Woof";
     }
 }

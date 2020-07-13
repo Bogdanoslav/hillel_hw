@@ -9,10 +9,10 @@ public class Animal {
    /// isVaccinated(у домашних),
    // isPredator(у диких),
    // isTrained (дрессированная - у собаки-поводыря).
-    int id;
-    int age;
-    int weight;
-    String color;
+    private int id;
+    private int age;
+    private  int weight;
+    private String color;
 
     public Animal(int id,  int age, int weight, String color) {
         this.id = id;
@@ -21,7 +21,7 @@ public class Animal {
         this.color = color;
     }
 
-    public String Say(){
+    public String say(){
         return ("Hello, ");
     }
 

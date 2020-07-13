@@ -2,37 +2,37 @@ package com.hw5;
 
 public class Wild extends Animal {
 
-    boolean isPredator;
+    boolean predator;
 
-    public Wild(int id, int age, int weight, String color, boolean isPredator) {
+    public Wild(int id, int age, int weight, String color, boolean predator) {
         super(id, age, weight, color);
-        this.isPredator = isPredator;
+        this.predator = predator;
     }
 
     @Override
     public String toString() {
         return "Wild{" +
-                "isPredator=" + isPredator +
-                ", id=" + id +
-                ", age=" + age +
-                ", weight=" + weight +
-                ", color='" + color + '\'' +
+                "isPredator=" + predator +
+                ", id=" + this.getId() +
+                ", age=" + this.getAge() +
+                ", weight=" + this.getWeight() +
+                ", color='" + this.getColor() + '\'' +
                 '}';
     }
 
     public boolean isPredator() {
-        return isPredator;
+        return predator;
     }
 
     public void setPredator(boolean predator) {
-        isPredator = predator;
+        this.predator = predator;
     }
 
     @Override
-    public String Say() {
-        if(isPredator)
-            return super.Say() + "I am a wild animal and i am angry";
+    public String say() {
+        if(predator)
+            return super.say() + "I am a wild animal and i am angry";
         else
-            return super.Say() + "I am a wild animal";
+            return super.say() + "I am a wild animal";
     }
 }
