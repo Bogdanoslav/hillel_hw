@@ -13,14 +13,14 @@ public class Main {
         GuideDog guideDog = new GuideDog(1,2,3,"Black", "Vanya", false, false);
         System.out.println(guideDog);
         System.out.println(guideDog.say());
-        //guideDog.TakeHome();
+        guideDog.takeHome();
 
         System.out.println();
 
         GuideDog guideDogTrained = new GuideDog(1,2,3,"Black", "Vanya", false, true);
         System.out.println(guideDogTrained);
         System.out.println(guideDogTrained.say());
-        //guideDog.TakeHome();
+        //guideDog.takeHome();
 
         System.out.println();
 

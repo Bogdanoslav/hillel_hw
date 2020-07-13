@@ -1,6 +1,6 @@
 package com.hw5;
 
-public class GuideDog extends Dog{
+public class GuideDog extends Dog implements IGuide {
     boolean trained;
 
     public GuideDog(int id, int age, int weight, String color, String name, boolean isVaccinated, boolean trained) {
@@ -19,7 +19,7 @@ public class GuideDog extends Dog{
 
 
 
-    public void TakeHome() throws InterruptedException {
+    public void takeHome() throws InterruptedException {
         String homing = "Taking home";
         for(int i = 0 ; i < 3; i++){
             homing+=".";

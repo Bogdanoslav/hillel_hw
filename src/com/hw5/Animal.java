@@ -1,6 +1,6 @@
 package com.hw5;
 
-public class Animal {
+public class Animal implements IAnimal{
     //id (у всех животных),
    // name (у домашних),
    // age(у всех животных),
@@ -21,9 +21,6 @@ public class Animal {
         this.color = color;
     }
 
-    public String say(){
-        return ("Hello, ");
-    }
 
     @Override
     public String toString() {
