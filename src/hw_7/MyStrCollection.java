@@ -1,4 +1,4 @@
-package hw_6;
+package hw_7;
 
 public class MyStrCollection {
     private String[] str_arr;
