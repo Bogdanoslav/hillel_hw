@@ -8,27 +8,24 @@ public class Main{
         test.add("C");
         test.add("D");
         test.add("E");
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        System.out.println("Count: " + test.getCount());
-        System.out.println(test.toString());
-        test.delete(2);
-        System.out.println(test.toString());
-        test.delete("A");
-        test.delete("E");
-        test.delete("E");
-        System.out.println(test.toString());
-        test.add(6, "3");
-        System.out.println(test.toString());
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        test.add("E");
-        System.out.println("Count: " + test.getCount());
+        test.add("F");
+        test.add("G");
+        test.add("H");
+        test.add("I");
+        test.add("J");
+        test.add("K");
+        test.add("L");
+        test.add("M");
+        test.add("TESTING",3);
+        test.add("TESTING",0);
+        test.delete(0);
+        test.delete(11);
+        test.delete("TESTING");
+        test.delete("TESTING");
+        test.delete("TESTING");
+
+        for(int i = 0; i < test.str_arr.length;i++){
+            System.out.println(test.str_arr[i]);
+        }
     }
 }

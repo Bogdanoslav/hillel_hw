@@ -1,107 +1,85 @@
 package hw_7;
 
 public class MyStrCollection {
-    private String[] str_arr;
-    private int Count = 16;
-    private int pointer = 0;
+    private int Count = 0;
+    public String[] str_arr;
 
-    public MyStrCollection(){
-        str_arr = new String[Count];
-    }
-    public void add(int index, String toAdd){
-        String[] new_arr = new String[Count+1];
-        if(index<0){
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        if(index >= Count){
-            Count*=2;
-            new_arr = new String[Count];
-            for(int i = 0; i < Count/2;i++){
-                new_arr[i] = str_arr[i];
-            }
-            str_arr = new_arr;
-        }
-        str_arr[index] = toAdd;
-        if(index >= pointer){
-            pointer = index+1;
-        }
-    }
-    public void add(String toAdd){
-        if(pointer == Count){
-            Count*=2;
-            String[] new_arr = new String[Count];
-            for(int i = 0; i < Count/2;i++){
-                new_arr[i] = str_arr[i];
-            }
-            str_arr = new_arr;
-        }
-        str_arr[pointer] = toAdd;
-        pointer++;
+    public MyStrCollection() {
+        this.str_arr = new String[10];
     }
 
-    public void delete(int index){
-        String[] new_arr = new String[Count];
-        if(index<0 || index>Count-1){
-            throw new ArrayIndexOutOfBoundsException();
+    public void add(String el){
+        if(Count< str_arr.length){
+            str_arr[Count] = el;
         }
-        for(int i = 0; i < Count-1; i++){
-            if(i>=index){
-                new_arr[i] = str_arr[i+1];
+        else{
+            String[] new_arr = new String[Count+1];
+            for(int i = 0; i < str_arr.length; i++){
+                new_arr[i] = str_arr[i];
+            }
+            new_arr[Count] = el;
+            str_arr = new_arr;
+        }
+        Count++;
+    }
+    public void add(String el, int index){
+        if(index>str_arr.length){
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds!");
+        }
+        String[] new_arr = new String[str_arr.length+1];
+        for(int i = 0; i < str_arr.length; i++){
+            if(i<index){
+                new_arr[i] = str_arr[i];
             }
             else{
+                new_arr[i+1] = str_arr[i];
+            }
+        }
+        new_arr[index] = el;
+        str_arr = new_arr;
+        Count++;
+    }
+    public void delete(int index){
+        String[] new_arr = new String[Count-1];
+        if(index>str_arr.length){
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bounds!");
+        }
+        for(int i = 0; i < new_arr.length; i++){
+            if(i< index){
                 new_arr[i] = str_arr[i];
+            }
+            else{
+                new_arr[i] = str_arr[i+1];
             }
         }
         str_arr = new_arr;
-        pointer--;
+        Count--;
     }
-    public void delete(String toDel){
-        int index = 0;
+    public void delete(String el){
+        String[] new_arr = new String[Count-1];
+        int index = -1;
         boolean isFound = false;
-
-        for(int i = 0; i < pointer; i++){
-            if(str_arr[i].equals(toDel)){
+        for(int i = 0; i < str_arr.length; i++){
+            if(str_arr[i]==el){
                 index = i;
                 isFound = true;
             }
         }
         if(isFound){
-            String[] new_arr = new String[Count];
-            for(int i = 0; i < Count-1; i++){
-                if(i>=index){
-                    new_arr[i] = str_arr[i+1];
+            for(int j = 0; j < new_arr.length; j++){
+                if(j < index){
+                    new_arr[j] = str_arr[j];
                 }
                 else{
-                    new_arr[i] = str_arr[i];
+                    new_arr[j] = str_arr[j+1];
                 }
             }
             str_arr = new_arr;
-            pointer--;
+            Count--;
         }
-    }
-
-    @Override
-    public String toString() {
-        String txt = "";
-        for(int i = 0; i < pointer; i++){
-            txt+=str_arr[i] + " ";
+        else{
+            throw new IndexOutOfBoundsException("Item: " + el + " not found");
         }
-        return txt;
-    }
+        }
 
-    public int getCount() {
-        return Count;
     }
-
-    public void setCount(int count) {
-        Count = count;
-    }
-
-    public int getPointer() {
-        return pointer;
-    }
-
-    public void setPointer(int pointer) {
-        this.pointer = pointer;
-    }
-}
