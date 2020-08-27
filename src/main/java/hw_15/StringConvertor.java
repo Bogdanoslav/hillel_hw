@@ -9,7 +9,11 @@ public class StringConvertor {
     private int str;
     private BufferedImage bufferedImage;
 
-    public StringConvertor(int width, int height, String str){
+    public StringConvertor(int width, int height, int[] arr){
+        String str = "";
+        for(int i = 0; i < arr.length; i++){
+            str+=arr[i];
+        }
         bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics graphics = bufferedImage.getGraphics();
         Graphics2D graphics2D = (Graphics2D) graphics;
