@@ -130,7 +130,6 @@ public class Game {
         }
 
         //Вывод игроков с таким же количеством очков
-        String resulatsToFile = "";
         System.out.println("Победители: ");
         for (Player p:
              rs.players) {
