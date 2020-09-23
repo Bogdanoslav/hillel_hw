@@ -25,17 +25,21 @@ import java.nio.file.Paths;
 public class Run_17 {
     public static void main(String[] args) {
         BufferedWriter writer;
-        String yToJStr =  convertYamlToJson(args[0]);
-        String jToY1Str = convertJsonToYaml1(args[1]);
-        String jToY2Str = convertJsonToYaml2(args[1]);
+        String yToJStr =  convertYamlToJson("src/main/java/hw_17/" + args[0] + ".yaml");
+        String jToY1Str = convertJsonToYaml1("src/main/java/hw_17/" + args[1] + ".json");
+        String jToY2Str = convertJsonToYaml2("src/main/java/hw_17/" + args[1] + ".json");
+        File yToJFile = new File("src/main/java/hw_17/" + args[0] + ".json");
+        File jToY1File = new File("src/main/java/hw_17/" + args[1] + "1.yaml");
+        File jToY2File = new File("src/main/java/hw_17/" + args[1] + "2.yaml");
+        String str = "Hello";
         try {
-            writer = new BufferedWriter(new FileWriter("converted_yaml.json"));
+            writer = new BufferedWriter(new FileWriter(yToJFile));
             writer.write(yToJStr);
             writer.close();
-            writer = new BufferedWriter(new FileWriter("converted_json1.yaml"));
+            writer = new BufferedWriter(new FileWriter(jToY1File));
             writer.write(jToY1Str);
             writer.close();
-            writer = new BufferedWriter(new FileWriter("converted_json2.yaml"));
+            writer = new BufferedWriter(new FileWriter(jToY2File));
             writer.write(jToY2Str);
             writer.close();
         } catch(IOException e){
