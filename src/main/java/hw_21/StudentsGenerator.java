@@ -1,12 +1,7 @@
-package hw_20;
+package hw_21;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Value;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor

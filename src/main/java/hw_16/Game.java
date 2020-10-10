@@ -1,6 +1,10 @@
 package hw_16;
 
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,7 +16,11 @@ import java.util.stream.Collectors;
 import static hw_16.Player.Shape.*;
 
 public class Game {
+    private static final Logger log =  LoggerFactory.getLogger(Game.class);
     public static void main(String[] args) {
+        //============LOG================
+        log.info("Пользователь запустил игру");
+        //============ENDLOG================
         Scanner sc = new Scanner(System.in);
         String[] correct_shapes = {"б","к","н"};
         String answ = "";
@@ -27,7 +35,7 @@ public class Game {
         System.out.println("Б/б бумага");
 
         Scanner s_num = new Scanner(System.in);
-
+        //Задание пользователем кол-ва игроков
         while(computers+humans<=1){
             System.out.println("\nКоличество игроков должно быть больше 1");
             do{
@@ -57,6 +65,7 @@ public class Game {
                 numOfGames = s_num.nextInt();
             } while (numOfGames<0);
         }
+        log.info("Количество выбранных игр: {}", numOfGames);
 
         RoshamboSession rs = new RoshamboSession(computers, humans, numOfGames);
         //Добавление компьютеров
@@ -69,29 +78,38 @@ public class Game {
             rs.players.add(new Player(i, false));
         }
         Scanner s_string = new Scanner(System.in);
+
+        int gamesLeft = numOfGames;
+        int gamesPlayed = 0;
+
         //Цикл раунда
         for (int j = 0; j < numOfGames; j++){
-            answ = "";
-            System.out.println("Прервать игру? (Q/q) / Любую строку чтобы продолжить");
+
+
+            //Вопрос о прерывании игры каждый раунд
+            System.out.print("Прервать игру? (Q/q) / Любую строку чтобы продолжить: ");
             answ = s_string.nextLine();
-            if(answ.toLowerCase().equals("q")){
+            if(answ.toLowerCase().equals("q"))
                 break;
-            }
-            players = rs.players;
+
+            //Список игроков для изменения
+            players = new ArrayList<>(rs.players);
             //Цикл определения победителя
             do {
                 System.out.println();
-
-                //Выбор компьютеров и людей
+                //Выбор компьютеров
                 for (Player p : players) {
                     if (p.isComputer()) {
                         p.computerChoice();
                     }
-                    else {
-                        String shape = "U";
+                }
+                //Выбор людей
+                for(Player p: players){
+                    if(!p.isComputer()){
+                        String shape;
                         do{
                             System.out.printf("Игрок номер %d выберите фигуру:  ", p.getId());
-                            shape = s_string.nextLine();
+                            shape = s_string.nextLine().toLowerCase();
                             System.out.println();
                         }while (Arrays.binarySearch(correct_shapes, shape)<0);
                         p.humanChoice(shape);
@@ -99,7 +117,18 @@ public class Game {
                 }
 
                 //Вывод игроков и компьютерв с их выборами
-                showPlayers(players);
+                System.out.println("Игроки и выкинутые ими фигуры");
+                showPlayersFigures(players);
+
+                //============LOG================
+                for(Player p: players) {
+                    if(p.isComputer())
+                        log.info("Computer chose {}", p.getShape().getName());
+                    else{
+                        log.info("Human chose {}", p.getShape().getName());
+                    }
+                }
+                //============ENDLOG================
 
                 //Убираем повторяющиейся фигуры
                 List<Player.Shape> shapes = players.stream().distinct().map(s -> s.getShape()).collect(Collectors.toList());
@@ -108,38 +137,43 @@ public class Game {
                 Player.Shape winShape = defineWinningShape(shapes);
 
                 //Собираем всех игроков с выигрышной фигурой и отправляем в след. раунд
-                if(!(winShape == UNDEFINED))
-                    players = players.stream().filter(s -> s.getShape() == winShape).collect(Collectors.toList());
+                if(winShape!=UNDEFINED)
+                  players = players.stream().filter(s -> s.getShape() == winShape).collect(Collectors.toList());
 
-            }while(players.size()!=1 && players.size()!=0);
+
+                System.out.println("Оставшиеся игроки после бросания");
+                showPlayersFigures(players);
+                System.out.println("______________________________________");
+            }while(players.size()>1);
 
             //увеличиваем очки победителя раунда
-
-            players.get(0).setScore(players.get(0).getScore()+1);
-
-            System.out.print("Победитель раунда:  ");
-            showPlayers(players);
-        }
-
-        //Вычисление игркоа с самым большим результатом
-        Player absWinner = rs.players.get(0);
-        for (i = 0; i < rs.players.size()-1; i++) {
-            if(rs.players.get(i).getScore()<rs.players.get(i+1).getScore()){
-                absWinner = rs.players.get(i+1);
+            for(Player p: players) {
+                p.setScore(p.getScore() + 1);
             }
+
+            System.out.print("\nПобедитель(и) раунда:  ");
+            showPlayers(players);
+
+            //============LOG================
+            gamesPlayed++;
+            gamesLeft--;
+            log.info("Played games {}. Games left: {}", gamesPlayed, gamesLeft);
+            //============ENDLOG================
         }
+
+        //Вычисление самого высокого результата
+        int highestScore = getHighestScore(players);
 
         //Вывод игроков с таким же количеством очков
-        System.out.println("Победители: ");
-        for (Player p:
-             rs.players) {
-            if(p.getScore() == absWinner.getScore()){
-                if(p.isComputer())
-                    System.out.printf("Компьютер номер %4d со счетом %d" + "\n", p.getId(),p.getScore());
-                else
-                    System.out.printf("Игрок номер %8d со счетом %d" + "\n", p.getId(),p.getScore());
+        System.out.println("\n === Победители === ");
+        ArrayList<Player> winners = new ArrayList<>();
+        for (Player p: rs.players) {
+            if(p.getScore() == highestScore){
+                winners.add(p);
             }
         }
+        showPlayers(winners);
+
         //Запись результатов в файл
         try {
             File file = new File("KamsatriResults.txt");
@@ -149,22 +183,14 @@ public class Game {
             SimpleDateFormat formatForDateNow = new SimpleDateFormat("Дата yyyy.MM.dd 'Время' hh:mm:ss");
             printWriter.println("\n" + formatForDateNow.format(dateNow));
             printWriter.println("Победители:");
-            for (Player p:
-                    rs.players) {
-                if(p.getScore() == absWinner.getScore()){
-                    if(p.isComputer())
-                        printWriter.printf("Компьютер номер %4d     со счетом %4d" + "\n", p.getId(),p.getScore());
-                    else
-                        printWriter.printf("Игрок     номер %4d     со счетом %4d" + "\n", p.getId(),p.getScore());
-                }
+            for (Player p: winners) {
+                    printWriter.println(p + "\n");
             }
             printWriter.close();
         } catch (IOException e){
             System.out.println(e);
             System.out.println("Ошибка при записи результатов");
         }
-
-
     }
     public static Player.Shape defineWinningShape(List<Player.Shape> shapes){
         if(shapes.size() == 3 || shapes.size() == 1){
@@ -178,15 +204,26 @@ public class Game {
         }
         return UNDEFINED;
     }
+
+    public static void showPlayersFigures(List<Player> players){
+        for (Player p:players) {
+            System.out.println(p + ".  Фигура = " + p.getShape().getName());
+        }
+    }
     public static void showPlayers(List<Player> players){
         for (Player p:players) {
-            if(p.isComputer())
-                System.out.printf("Компьютер номер %4d со счетом %4d" + "\n", p.getId(),p.getScore());
-            else{
-                System.out.printf("Игрок     номер %4d со счетом %4d" + "\n", p.getId(),p.getScore());
+            System.out.println(p);
+        }
+    }
+
+    public static int getHighestScore(List<Player> players){
+        int highestScore = -1;
+        for (int i = 0; i < players.size(); i++) {
+            if(players.get(i).getScore()>highestScore){
+                highestScore = players.get(i).getScore();
             }
         }
-        System.out.println();
+        return highestScore;
     }
 
 }

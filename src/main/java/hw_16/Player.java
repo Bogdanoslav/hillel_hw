@@ -1,17 +1,27 @@
 package hw_16;
 
+
+
+import org.apache.log4j.Logger;
+
 import java.util.Objects;
 
 public class Player {
     public enum Shape {
-        SCISSORS,
-        STONE,
-        PAPER,
-        UNDEFINED
+        SCISSORS("Ножницы"),
+        STONE("Камень"),
+        PAPER("Бумага"),
+        UNDEFINED("Неопределено");
+        String name;
+        Shape(String name) {
+            this.name = name;
+        }
+        public String getName(){ return name;}
     }
     protected Shape shape;
     protected int id;
     protected int score;
+    String choice;
 
 
 
@@ -20,6 +30,7 @@ public class Player {
     public Player(int id, boolean computer){
         this.id = id;
         this.computer = computer;
+        choice = "";
     }
 
     public void computerChoice(){
@@ -35,8 +46,8 @@ public class Player {
                 break;
         }
     }
-    public void humanChoice(String choice){
-        switch (choice.toLowerCase()){
+    public void humanChoice(String ch){
+        switch (ch.toLowerCase()){
             case "н":
                 shape = Shape.SCISSORS;
                 break;
@@ -51,36 +62,25 @@ public class Player {
                 break;
         }
     }
+
     public int getScore() {
         return score;
     }
-
     public void setScore(int score) {
         this.score = score;
     }
     public Shape getShape() {
         return shape;
     }
-
-    public void setShape(Shape shape) {
-        this.shape = shape;
-    }
-
+    public void setShape(Shape shape) { this.shape = shape; }
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
-    public boolean isComputer() {
-        return computer;
-    }
-
-    public void setComputer(boolean computer) {
-        this.computer = computer;
-    }
+    public boolean isComputer() { return computer; }
+    public void setComputer(boolean computer) { this.computer = computer; }
 
     @Override
     public boolean equals(Object o) {
@@ -93,5 +93,13 @@ public class Player {
     @Override
     public int hashCode() {
         return Objects.hash(shape);
+    }
+
+    @Override
+    public String toString() {
+        if(computer)
+            return "Компьютер #" + id + ", счет: " + score;
+        else
+            return "Человек #" + id + ", счет: " + score;
     }
 }

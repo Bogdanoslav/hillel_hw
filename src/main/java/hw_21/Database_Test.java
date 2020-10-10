@@ -1,9 +1,6 @@
-package hw_20;
+package hw_21;
 
-import javax.xml.transform.Result;
-import java.net.ConnectException;
 import java.sql.*;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 
