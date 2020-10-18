@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,8 +16,11 @@ import static hw_16_v2.IPlayer.Shape.*;
 public class Game_v2 {
     private static final Logger log =  LoggerFactory.getLogger(Game_v2.class);
     public static void main(String[] args) {
+        Locale loc = new Locale(args[2]);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("roshambo", loc);
+        ResourceBundle rbLog = ResourceBundle.getBundle("roshamboLog", loc);
         //============LOG================
-        log.info("\nПользователь запустил игру");
+        log.info(rbLog.getString("info_startGame"));
         //============ENDLOG================
         String answer;
         int numOfGames = 0;
@@ -25,54 +28,50 @@ public class Game_v2 {
         int computers = 0;
         List<IPlayer> players = new ArrayList<>();
 
-
-        System.out.println("К/к - камень");
-        System.out.println("Н/н ножницы");
-        System.out.println("Б/б бумага");
-
+        System.out.println(resourceBundle.getString("rules"));
         Scanner s_num = new Scanner(System.in);
         //Задание пользователем кол-ва игроков
         while(computers+humans<=1){
-            System.out.println("\nКоличество игроков должно быть больше 1");
             do{
-                System.out.print("Количество людей: ");
+                System.out.print(resourceBundle.getString("input_amountOfHumans"));
                 while (!s_num.hasNextInt()){
-                    System.out.print("Количество людей: ");
+                    System.out.print(resourceBundle.getString("input_amountOfHumans"));
                     s_num.next();
                 }
                 humans = s_num.nextInt();
             } while (humans<0);
 
             do{
-                System.out.print("Количество компьютеров: ");
+                System.out.print(resourceBundle.getString("input_amountOfComputers"));
                 while (!s_num.hasNextInt()){
-                    System.out.print("Количество компьютеров: ");
+                    System.out.print(resourceBundle.getString("input_amountOfComputers"));
                     s_num.next();
                 }
                 computers = s_num.nextInt();
             } while (computers<0);
 
             do{
-                System.out.print("Количество игр: ");
+                System.out.print(resourceBundle.getString("input_amountOfGames"));
                 while (!s_num.hasNextInt()){
-                    System.out.print("Количество игр: ");
+                    System.out.print(resourceBundle.getString("input_amountOfGames"));
                     s_num.next();
                 }
                 numOfGames = s_num.nextInt();
             } while (numOfGames<0);
         }
-        log.info("Количество выбранных игр: {}", numOfGames);
-
+        //=========LOG===========
+        log.info(rbLog.getString("info_amountOfGames").concat("{}"), numOfGames);
+        //=========ENDLOG===========
         RoshamboSession_v2 rs = new RoshamboSession_v2(computers, humans, numOfGames);
         //Добавление компьютеров
         int i;
         for (i = 0; i < computers; i++) {
-            rs.players.add(new ComputerPlayer(i));
+            rs.players.add(new ComputerPlayer(i, resourceBundle));
         }
         humans+=i;
         //Добавление людей
         for (; i < humans; i++) {
-            rs.players.add(new HumanPlayer(i));
+            rs.players.add(new HumanPlayer(i, resourceBundle));
         }
         Scanner s_string = new Scanner(System.in);
 
@@ -82,16 +81,15 @@ public class Game_v2 {
 
         //Цикл раунда
         for (int j = 0; j < numOfGames; j++){
-
+            //Список игроков для изменения
+            players = new ArrayList<>(rs.players);
 
             //Вопрос о прерывании игры каждый раунд
-            System.out.print("Прервать игру? (Q/q) / Любую строку чтобы продолжить: ");
+            System.out.print(resourceBundle.getString("q_continue"));
             answer = s_string.nextLine();
             if(answer.toLowerCase().equals("q"))
                 break;
 
-            //Список игроков для изменения
-            players = new ArrayList<>(rs.players);
             //Цикл определения победителя
             do {
                 //Выбор игроков
@@ -100,11 +98,11 @@ public class Game_v2 {
                     p.makeChoice();
                 }
                 //Вывод игроков и компьютерв с их выборами
-                System.out.println("Игроки и выкинутые ими фигуры");
-                System.out.println(showPlayersFigures(players));
+                System.out.println(resourceBundle.getString("info_playersFigures"));
+                System.out.println(showPlayersFigures(players, resourceBundle));
 
                 //============LOG================
-                log.info("\n{}",showPlayersFigures(players));
+                log.info("\n{}",showPlayersFigures(players, resourceBundle));
                 //============ENDLOG================
 
                 //Убираем повторяющиейся фигуры
@@ -118,8 +116,8 @@ public class Game_v2 {
                     players = players.stream().filter(s -> s.getShape() == winShape).collect(Collectors.toList());
 
 
-                System.out.println("Оставшиеся игроки после бросания");
-                System.out.println(showPlayersFigures(players));
+                System.out.println(resourceBundle.getString("info_remainingPlayers"));
+                System.out.println(showPlayersFigures(players, resourceBundle));
                 System.out.println("______________________________________");
             }while(players.size()>1);
 
@@ -128,17 +126,17 @@ public class Game_v2 {
                 p.setScore(p.getScore() + 1);
             }
 
-            System.out.print("\nПобедитель(и) раунда:  ");
+            System.out.print(resourceBundle.getString("info_roundWinner"));
             System.out.println(showPlayers(players));
 
             //============LOG================
-            log.info("Round winner {}",showPlayers(players));
+            log.info(rbLog.getString("info_roundWinner").concat("{}"),showPlayers(players));
             //============ENDLOG================
 
             //============LOG================
             gamesPlayed++;
             gamesLeft--;
-            log.info("Played games {}. Games left: {}\n", gamesPlayed, gamesLeft);
+            log.info(rbLog.getString("info_playedGames").concat("{}. ").concat(rbLog.getString("info_gamesLeft")).concat("{}"), gamesPlayed, gamesLeft);
             //============ENDLOG================
         }
 
@@ -152,12 +150,14 @@ public class Game_v2 {
         }
 
         //Вывод игроков с таким же количеством очков
-        System.out.println("\n === Победители === ");
+        System.out.println(resourceBundle.getString("info_absWinner"));
         System.out.println(showPlayers(winners));
 
         //Запись результатов в файл
-        writeResults(rs.players, winners);
-        log.info("Программа завершена");
+        writeResults(rs.players, winners, resourceBundle, rbLog);
+        //=============LOG=================
+        log.info(rbLog.getString("info_finishGame"));
+        //=============ENDLOG=================
     }
     public static IPlayer.Shape defineWinningShape(List<IPlayer.Shape> shapes){
         if(shapes.size() >=3 || shapes.size() <= 1){
@@ -165,16 +165,16 @@ public class Game_v2 {
         }
         else{
             if(shapes.contains(SCISSORS))
-                return shapes.contains(PAPER)? SCISSORS: STONE;
-            if(shapes.contains(STONE))
-                return shapes.contains(SCISSORS)? STONE: PAPER;
+                return shapes.contains(PAPER)? SCISSORS: ROCK;
+            if(shapes.contains(ROCK))
+                return shapes.contains(SCISSORS)? ROCK : PAPER;
         }
         return UNDEFINED;
     }
-    public static String showPlayersFigures(List<IPlayer> players){
+    public static String showPlayersFigures(List<IPlayer> players, ResourceBundle resourceBundle){
         StringBuilder txt = new StringBuilder();
         for (IPlayer p:players) {
-            txt.append(p).append(".  Фигура = ").append(p.getShape().getName()).append("\n");
+            txt.append(p).append(".  ").append(resourceBundle.getString("shape")).append(" = ").append(p.getShapeName()).append("\n");
         }
         return txt.toString();
     }
@@ -194,22 +194,20 @@ public class Game_v2 {
         }
         return highestScore;
     }
-    public static void writeResults(List<IPlayer> players, List<IPlayer> winners){
+    public static void writeResults(List<IPlayer> players, List<IPlayer> winners, ResourceBundle resourceBundle,ResourceBundle rbLog){
         try {
-            log.info("Запись результатов");
+            log.info(rbLog.getString("info_writingToFile"));
             File file = new File("src/main/java/hw_16_v2/info/Results.txt");
             FileWriter fileWriter = new FileWriter(file, true);
             PrintWriter printWriter = new PrintWriter(fileWriter) ;
-            Date dateNow = new Date();
-            SimpleDateFormat formatForDateNow = new SimpleDateFormat("Дата yyyy.MM.dd 'Время' hh:mm:ss");
-            printWriter.println(formatForDateNow.format(dateNow));
-            printWriter.println("РЕЗУЛЬТАТЫ:");
+            printWriter.println(printData(resourceBundle.getLocale()));
+            printWriter.println(resourceBundle.getString("info_results"));
             int n = 1;
             for (IPlayer p: players) {
                 printWriter.println(n + ". " + p);
                 n++;
             }
-            printWriter.println("ПОБЕДИТЕЛЬ(И):");
+            printWriter.println(resourceBundle.getString("info_absWinner"));
             n = 1;
             for (IPlayer p: winners) {
                 printWriter.println(n + ". " + p);
@@ -217,12 +215,18 @@ public class Game_v2 {
             }
             printWriter.println();
             printWriter.close();
-            log.info("Результаты успешно записаны\n");
+            //=========LOG===========
+            log.info(rbLog.getString("info_writeSuccess"));
+            //=========ENDLOG===========
         } catch (IOException e){
             System.out.println(e);
-            log.error("Ошибка при записи файла");
-            System.out.println("Ошибка при записи результатов");
+            log.error(rbLog.getString("IOException"));
+            System.out.println(resourceBundle.getString("error_IOException"));
         }
+    }
+    private static String printData(Locale loc) {
+        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, loc);
+        return  df.format(new Date());
     }
 
 }

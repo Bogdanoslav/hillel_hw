@@ -1,13 +1,14 @@
 package hw_16_v2;
 
 import java.util.Arrays;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 public class HumanPlayer extends IPlayer{
     public static Scanner hPlayerScanner = new Scanner(System.in);
 
-    public HumanPlayer(int id){
-        super(id);
+    public HumanPlayer(int id, ResourceBundle rb){
+        super(id, rb);
     }
 
     @Override
@@ -15,29 +16,24 @@ public class HumanPlayer extends IPlayer{
 
         String ch;
         do{
-            System.out.print("Игрок #" + id + " сделайте выбор: ");
+            System.out.print(resourceBundle.getString("player") + "#" + id + " " +  resourceBundle.getString("input_makeChoice"));
             ch = hPlayerScanner.nextLine().toLowerCase();
             System.out.println();
-        }while (Arrays.binarySearch(correct_shapes, ch)<0);
-        switch (ch.toLowerCase()){
-            case "н":
+        }while (!Arrays.asList(correct_shapes).contains(ch));
+
+            if(ch.equals(correct_shapes[0]))
+                shape = Shape.ROCK;
+            else if(ch.equals(correct_shapes[1]))
                 shape = Shape.SCISSORS;
-                break;
-            case "к":
-                shape = Shape.STONE;
-                break;
-            case "б":
+            else if(ch.equals(correct_shapes[2]))
                 shape = Shape.PAPER;
-                break;
-            default:
+            else
                 shape = Shape.UNDEFINED;
-                break;
-        }
     }
 
     @Override
     public String toString() {
-        return "Игрок     #" + id + " Cчет: " + score;
+        return resourceBundle.getString("player") + " #" + id + " " + resourceBundle.getString("score") + score;
     }
 
     @Override
@@ -50,3 +46,4 @@ public class HumanPlayer extends IPlayer{
         return super.equals(obj);
     }
 }
+

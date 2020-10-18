@@ -1,20 +1,18 @@
 package hw_16_v2;
 
+import java.util.Locale;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public abstract class IPlayer {
+    static ResourceBundle resourceBundle;
     public enum Shape {
-        SCISSORS("Ножницы"),
-        STONE("Камень"),
-        PAPER("Бумага"),
-        UNDEFINED("Неопределено");
-        String name;
-        Shape(String name) {
-            this.name = name;
-        }
-        public String getName(){ return name;}
+        SCISSORS,
+        ROCK,
+        PAPER,
+        UNDEFINED
     }
-    String[] correct_shapes = {"б","к","н"};
+    String[] correct_shapes;
     protected Shape shape;
     protected int id;
     protected int score;
@@ -22,14 +20,30 @@ public abstract class IPlayer {
     public IPlayer(){
 
     }
-    public IPlayer(int id){
+    public IPlayer(int id, ResourceBundle rs){
         this.id = id;
+        resourceBundle = rs;
+         correct_shapes = new String[]{rs.getString("input_rock"),rs.getString("input_scissors"),rs.getString("input_paper")};
     }
 
     public abstract void makeChoice();
 
     public int getScore() {
         return score;
+    }
+
+    public String getShapeName(){
+        Shape shape = this.getShape();
+        switch (shape){
+            case ROCK:
+                return resourceBundle.getString("shape_rock");
+            case SCISSORS:
+                return  resourceBundle.getString("shape_scissors");
+            case PAPER:
+                return  resourceBundle.getString("shape_paper");
+
+        }
+        return  resourceBundle.getString("shape_undefined");
     }
 
     @Override
