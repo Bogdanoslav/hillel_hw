@@ -7,7 +7,7 @@ import java.util.LinkedList;
 public class MyLRUMap<K, V> {
     private HashMap<K, V> hashMap;
     private LinkedList<V> linkedList;
-    private int size;
+    final private int size;
     private int count;
 
     public MyLRUMap(int size){
@@ -20,7 +20,7 @@ public class MyLRUMap<K, V> {
     public void put(K key ,V val) {
         if(count==size){
             hashMap.remove(linkedList.getFirst().hashCode());
-            linkedList.removeFirst();;
+            linkedList.removeFirst();
             count--;
         }
         if(!linkedList.contains(val)){

@@ -1,15 +1,13 @@
 package hw_26;
 
-import com.fasterxml.jackson.databind.util.LRUMap;
-
-import java.util.HashMap;
-
 public class MyCache {
-    private int lifeTime;
+    final private int lifeTime;
+    final private int size;
     private MyLRUMap<Integer, Object> objects;
 
     public MyCache(int time, int size){
-        objects = new MyLRUMap<>(size);
+        this.size = size;
+        objects = new MyLRUMap<>(this.size);
         lifeTime = time;
         clearCache();
     }
